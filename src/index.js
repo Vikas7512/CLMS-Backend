@@ -18,3 +18,5 @@ app.use("/users", UserRouter);
 app.listen(3000);
 
 module.exports = connection;
+
+module;
