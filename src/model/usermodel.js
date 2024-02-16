@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const UserModel = new Schema({
   name: String,
-  email: String,
+  email: { type: String, unique: true },
   password: String,
   phone_no: Number,
   stream: String,
