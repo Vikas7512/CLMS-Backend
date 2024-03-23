@@ -2,7 +2,9 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const express = require("express");
 const md5 = require("md5");
-const UserRouter = require("./routes");
+// const UserRouter = require("./routes");
+const BookRouter = require("./book/book.routes");
+const UserRouter = require("./user/user.routes");
 const app = express();
 app.use(express.json());
 app.use(
@@ -19,7 +21,10 @@ app.get("/", function (req, res) {
 });
 
 app.use("/users", UserRouter);
+app.use("/books", BookRouter);
 
-app.listen(3000);
+app.listen(3000, () => {
+  console.log("Server listening on port 3000");
+});
 
 module.exports = connection;
