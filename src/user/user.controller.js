@@ -23,4 +23,18 @@ UserController.createUser = async (req, res) => {
   return res.status(201).json("User created");
 };
 
+UserController.login = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    console.log({ email, password });
+    const user = await User.findOne({ email: email, password: password });
+    if (!user) {
+      return res.status(404).json("User not found");
+    }
+    return res.status(200).json({ email: user.email, isAdmin: user.isAdmin });
+  } catch (error) {
+    return res.status(500).json("Error while authenticating user");
+  }
+};
+
 module.exports = UserController;
