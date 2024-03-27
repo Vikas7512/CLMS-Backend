@@ -1,19 +1,20 @@
-const md5 = require("md5");
+const bcrypt = require("bcrypt");
 const User = require("../models/user.model");
 
 const UserController = () => {};
 
+const saltRounds = 10;
 UserController.createUser = async (req, res) => {
   const { name, email, password, phone_no, stream } = req.body;
   const userExits = await User.findOne({ email: email });
   if (userExits) {
     return res.status(409).json("User already exists.");
   }
-  const md5Pass = md5(password);
+  const hashPass = await bcrypt.hash(password, saltRounds);
   const user = await User.create({
     name,
     email,
-    password: md5Pass,
+    password: hashPass,
     phone_no,
     stream,
   });
@@ -27,9 +28,13 @@ UserController.login = async (req, res) => {
   const { email, password } = req.body;
   try {
     console.log({ email, password });
-    const user = await User.findOne({ email: email, password: password });
+    const user = await User.findOne({ email });
     if (!user) {
       return res.status(404).json("User not found");
+    }
+    const checkValidPassword = await bcrypt.compare(password, user.password);
+    if (!checkValidPassword) {
+      return res.status(401).json("Wrong Password");
     }
     return res.status(200).json({ email: user.email, isAdmin: user.isAdmin });
   } catch (error) {
