@@ -27,7 +27,6 @@ UserController.createUser = async (req, res) => {
 UserController.login = async (req, res) => {
   const { email, password } = req.body;
   try {
-    console.log({ email, password });
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(404).json("User not found");
